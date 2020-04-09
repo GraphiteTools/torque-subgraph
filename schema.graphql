@@ -1,0 +1,18 @@
+type User @entity {
+	id: ID!
+	loans: [Loan!] @derivedFrom(field: "borrower")
+}
+
+type Token @entity {
+	id: ID!
+	symbol: String!
+}
+
+type Loan @entity {
+	id: ID!
+	borrower: User!
+	token: Token!
+	amount: BigInt!
+	interestRate: BigInt!
+	timestamp: BigInt!
+}
