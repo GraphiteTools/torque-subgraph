@@ -26,7 +26,6 @@ export function handleBorrow(event: Borrow): void {
 	let user = User.load(borrower.toHexString());
 	if (!user) {
 		user = new User(borrower.toHexString());
-		user.loans = [];
 		user.save();
 	}
 
@@ -37,9 +36,9 @@ export function handleBorrow(event: Borrow): void {
 		loan.borrower = borrower.toHexString();
 		loan.token = address.toHexString();
 		loan.amount = new BigInt(0);
-		loan.interestRate = interestRate;
-		loan.timestamp = event.block.timestamp;
 	}
+	loan.timestamp = event.block.timestamp;
+	loan.interestRate = interestRate;
 	loan.amount += amount;
     loan.save();
 }
@@ -54,17 +53,13 @@ export function handleRepay(event: Repay): void {
 	let user = User.load(borrower.toHexString());
 	if (!user) {
 		user = new User(borrower.toHexString());
-		user.loans = [];
 		user.save();
 	}
 
 	let loanId = borrower.toHexString() + '-' + address.toHexString();
 	let loan = Loan.load(loanId);
 	if (!loan) {
-		loan = new Loan(loanId);
-		loan.borrower = borrower.toHexString();
-		loan.token = address.toHexString();
-		loan.amount = new BigInt(0);
+		return;
 	}
 	loan.amount -= amount;
 	loan.save();
